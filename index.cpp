@@ -45,8 +45,8 @@ struct NhaTro {
 	}
 	NhaTro(string maPhong, string hoTen, string ngaySinh, string soCMND, int chiSoDien, int chiSoNuoc, double donGia)
 	{
-		this->maPhong = hoTen;
-		this->hoTen = maPhong;
+		this->maPhong = maPhong;
+		this->hoTen = hoTen;
 		this->ngaySinh = ngaySinh;
 		this->soCMND = soCMND;
 		this->chiSoDien = chiSoDien;
@@ -94,7 +94,13 @@ public:
 		rear = NULL;
 	}
 
-	void enqueue(string maPhong, string hoTen, string ngaySinh, string soCMND, int chiSoDien, int chiSoNuoc, double donGia) {
+	void enqueue(string maPhong, 
+	             string hoTen, 
+				 string ngaySinh, 
+				 string soCMND, 
+				 int chiSoDien, 
+				 int chiSoNuoc, 
+				 double donGia) {
 		NhaTro* temp = new NhaTro(maPhong, hoTen, ngaySinh, soCMND, chiSoDien, chiSoNuoc, donGia);
 		if (rear == NULL) {
 			front = rear = temp;
@@ -119,7 +125,7 @@ public:
 
 	void display() {
 		NhaTro* current = front;
-		while (current != nullptr) {
+		while (current != NULL) {
 			std::cout << "Ma Phong: " << current->maPhong << endl <<
 				"Ho Ten: " << current->hoTen << endl <<
 				"Ngay sinh: " << current->ngaySinh << endl <<
@@ -211,8 +217,8 @@ int main()
 {
 	Queue hangDoiNhaTro;
 
-	hangDoiNhaTro.enqueue("P001", "Tran Van A", "123456789", "01/01/1990",100, 150, 3000000.5);
-	hangDoiNhaTro.enqueue("P002", "Nguyen Van b", "123456789", "01/01/1990",100, 150, 3000000.5); // Tiếp tục nhập thông tin nhà trọ
+	hangDoiNhaTro.enqueue("P001", "Tran Van A", "01/01/1990", "123456789", 100, 150, 3000.5);
+	hangDoiNhaTro.enqueue("P002", "Nguyen Van b","01/01/1990", "123456789" ,100, 150, 3000.5); 
 
 	cout << "Thong tin nhung nha tro trong queue: \n";
 	hangDoiNhaTro.display();
@@ -252,10 +258,10 @@ int main()
     }
 
 	int tongChiSoDien = hangDoiNhaTro.tinhTongChiSoDien();
-    cout << "Tong chi so dien cua tat ca phong tro la: " << tongChiSoDien << "n";
+    cout << "Tong chi so dien cua tat ca phong tro la: " << tongChiSoDien << "\n";
 
 	int soLuongPhongTro = hangDoiNhaTro.demSoPhongTroNguoiThueSinhtuNam(2002);
-    std::cout << "So luong phong tro co nguoi thue sinh truoc nam 2002 la: " << soLuongPhongTro << "n";
+    std::cout << "So luong phong tro co nguoi thue sinh truoc nam 2002 la: " << soLuongPhongTro << "\n";
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
