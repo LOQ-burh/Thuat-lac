@@ -177,6 +177,32 @@ public:
 
 		return count;
 	}
+
+	// Hàm tính tổng chỉ số điện
+    int tinhTongChiSoDien() {
+        int tongChiSoDien = 0;
+        NhaTro* current = front;
+        while (current != NULL) {
+            tongChiSoDien += current->chiSoDien;
+            current = current->next;
+        }
+        return tongChiSoDien;
+    }
+
+	// Hàm đếm số lượng phòng trọ có người thuê trọ sinh trước năm 2002
+    int demSoPhongTroNguoiThueSinhtuNam(int nam) {
+        int dem = 0;
+        NhaTro* current = front;
+        while (current != NULL) {
+			string namSinh = current->ngaySinh.substr(6, 4);
+			int namInt = std::stoi(namSinh);
+            if (namInt < nam) {
+                dem++;
+            }
+            current = current->next;
+        }
+        return dem;
+    }
 };
 
 
@@ -211,19 +237,25 @@ int main()
 	std::string tenCanTim = "Tran Van A";
     NhaTro* nhaTroCuaTranVanA = hangDoiNhaTro.timNhaTroTheoTen(tenCanTim);
     if (nhaTroCuaTranVanA != NULL) {
-        std::cout << "Thong tin nha tro cua " << tenCanTim << "\n";
-        std::cout << "Ma Phong: " << nhaTroCuaTranVanA->maPhong << "\n";
+        cout << "Thong tin nha tro cua " << tenCanTim << "\n";
+        cout << "Ma Phong: " << nhaTroCuaTranVanA->maPhong << "\n";
         // In ra thông tin khác của phòng trọ nếu muốn
     } else {
-        std::cout << "Khong tim thay nha tro cua " << tenCanTim << "\n";
+        cout << "Khong tim thay nha tro cua " << tenCanTim << "\n";
     }
 
 	int soPhongTroDonGiaCaoNhat = hangDoiNhaTro.timSoPhongTroCoDonGiaCaoNhat();
 	if (soPhongTroDonGiaCaoNhat != 0) {
-        std::cout << "So phong tro co don gia cao nhat" << soPhongTroDonGiaCaoNhat << "\n";
+        cout << "So phong tro co don gia cao nhat" << soPhongTroDonGiaCaoNhat << "\n";
     } else {
-        std::cout << "Khong co so phong tro nao co don gia cao nhat" << "\n";
+        cout << "Khong co so phong tro nao co don gia cao nhat" << "\n";
     }
+
+	int tongChiSoDien = hangDoiNhaTro.tinhTongChiSoDien();
+    cout << "Tong chi so dien cua tat ca phong tro la: " << tongChiSoDien << "n";
+
+	int soLuongPhongTro = hangDoiNhaTro.demSoPhongTroNguoiThueSinhtuNam(2002);
+    std::cout << "So luong phong tro co nguoi thue sinh truoc nam 2002 la: " << soLuongPhongTro << "n";
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
