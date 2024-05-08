@@ -167,7 +167,7 @@ public:
 	// Hàm Đếm số phòng trọ có đơn giá phòng trọ cao nhất. 
 	int timSoPhongTroCoDonGiaCaoNhat() {
 		if (front == NULL) {
-			return NULL;
+			return 0;
 		}
 		int count = 0;
 		NhaTro* maxDonGia = front;
