@@ -3,27 +3,28 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <sstream>
 
 using namespace std;
 
-struct QNode { 
-    int data; 
-    QNode* next; 
+struct QNode {
+	int data;
+	QNode* next;
 
-    QNode() 
-    { 
-        next = NULL; 
-    } 
-    QNode(int d) 
-    { 
-        data = d; 
-        next = NULL; 
-    } 
-    void input() {
-        cout << "data: ";
+	QNode()
+	{
+		next = NULL;
+	}
+	QNode(int d)
+	{
+		data = d;
+		next = NULL;
+	}
+	void input() {
+		cout << "data: ";
 		cin >> this->data;
-    }
-}; 
+	}
+};
 
 struct NhaTro {
 	string maPhong;
@@ -83,10 +84,10 @@ struct NhaTro {
 
 class Queue {
 
-NhaTro nhaTro;
+	NhaTro nhaTro;
 
 public:
-	NhaTro *front, *rear;
+	NhaTro* front, * rear;
 
 public:
 	Queue() {
@@ -94,13 +95,13 @@ public:
 		rear = NULL;
 	}
 
-	void enqueue(string maPhong, 
-	             string hoTen, 
-				 string ngaySinh, 
-				 string soCMND, 
-				 int chiSoDien, 
-				 int chiSoNuoc, 
-				 double donGia) {
+	void enqueue(string maPhong,
+		string hoTen,
+		string ngaySinh,
+		string soCMND,
+		int chiSoDien,
+		int chiSoNuoc,
+		double donGia) {
 		NhaTro* temp = new NhaTro(maPhong, hoTen, ngaySinh, soCMND, chiSoDien, chiSoNuoc, donGia);
 		if (rear == NULL) {
 			front = rear = temp;
@@ -154,16 +155,16 @@ public:
 		return maxChiSoDienNhaTro;
 	}
 	// Hàm tìm kiếm nhà trọ theo tên người thuê
-    NhaTro* timNhaTroTheoTen(const std::string& hoTen) {
-        NhaTro* current = front;
-        while (current != NULL) {
-            if (current->hoTen == hoTen) {
-                return current;
-            }
-            current = current->next;
-        }
-        return NULL;
-    }
+	NhaTro* timNhaTroTheoTen(const std::string& hoTen) {
+		NhaTro* current = front;
+		while (current != NULL) {
+			if (current->hoTen == hoTen) {
+				return current;
+			}
+			current = current->next;
+		}
+		return NULL;
+	}
 	// Hàm Đếm số phòng trọ có đơn giá phòng trọ cao nhất. 
 	int timSoPhongTroCoDonGiaCaoNhat() {
 		if (front == NULL) {
@@ -185,30 +186,84 @@ public:
 	}
 
 	// Hàm tính tổng chỉ số điện
-    int tinhTongChiSoDien() {
-        int tongChiSoDien = 0;
-        NhaTro* current = front;
-        while (current != NULL) {
-            tongChiSoDien += current->chiSoDien;
-            current = current->next;
-        }
-        return tongChiSoDien;
-    }
+	int tinhTongChiSoDien() {
+		int tongChiSoDien = 0;
+		NhaTro* current = front;
+		while (current != NULL) {
+			tongChiSoDien += current->chiSoDien;
+			current = current->next;
+		}
+		return tongChiSoDien;
+	}
 
 	// Hàm đếm số lượng phòng trọ có người thuê trọ sinh trước năm 2002
-    int demSoPhongTroNguoiThueSinhtuNam(int nam) {
-        int dem = 0;
-        NhaTro* current = front;
-        while (current != NULL) {
+	int demSoPhongTroNguoiThueSinhtuNam(int nam) {
+		int dem = 0;
+		NhaTro* current = front;
+		while (current != NULL) {
 			string namSinh = current->ngaySinh.substr(6, 4);
 			int namInt = std::stoi(namSinh);
-            if (namInt < nam) {
-                dem++;
-            }
-            current = current->next;
-        }
-        return dem;
-    }
+			if (namInt < nam) {
+				dem++;
+			}
+			current = current->next;
+		}
+		return dem;
+	}
+
+	// Hàm đọc file với tên file đầu vào và trả về danh sách nhà trọ
+	void docFileDanhSachNhaTro(const string& tenFile, vector<NhaTro> dsNhaTro) {
+		ifstream infile;
+		infile.open(tenFile);
+
+		string line;
+
+		if (infile.is_open()) {
+			while (getline(infile, line)) {
+				std::istringstream iss(line);
+				NhaTro nhaTro;
+				string maPhong, hoTen, ngaySinh;
+				int soCMND, chiSoDien, chiSoNuoc;
+				double donGia;
+
+				getline(iss, nhaTro.maPhong, '\n');
+				getline(iss, nhaTro.hoTen, '\n');
+				getline(iss, nhaTro.ngaySinh, '\n');
+				infile >> nhaTro.soCMND; cout << endl;
+				infile >> nhaTro.chiSoDien; cout << endl;
+				infile >> nhaTro.chiSoNuoc; cout << endl;
+				infile >> nhaTro.donGia; cout << endl;
+
+				// Thêm vào danh sách nhà trọ
+				dsNhaTro.push_back(nhaTro);
+			}
+			infile.close();
+		}
+		else {
+			cerr << "Khong the mo file: " << tenFile << endl;
+		}
+	}
+
+	// Hàm ghi danh sách nhà trọ vào file output.txt
+	void ghiFileDanhSachNhaTro(const vector<NhaTro>& dsNhaTro, const string& tenFile) {
+		ofstream outFile(tenFile);
+
+		if (outFile.is_open()) {
+			for (const auto& nhaTro : dsNhaTro) {
+				outFile << nhaTro.maPhong << endl <<
+					nhaTro.hoTen << endl <<
+					nhaTro.ngaySinh << endl <<
+					nhaTro.soCMND << endl <<
+					nhaTro.chiSoDien << endl <<
+					nhaTro.chiSoNuoc << endl <<
+					nhaTro.donGia << endl;
+			}
+			outFile.close();
+		}
+		else {
+			std::cerr << "Khong the tao file: " << tenFile << std::endl;
+		}
+	}
 };
 
 
@@ -218,7 +273,7 @@ int main()
 	Queue hangDoiNhaTro;
 
 	hangDoiNhaTro.enqueue("P001", "Tran Van A", "01/01/1990", "123456789", 100, 150, 3000.5);
-	hangDoiNhaTro.enqueue("P002", "Nguyen Van b","01/01/1990", "123456789" ,100, 150, 3000.5); 
+	hangDoiNhaTro.enqueue("P002", "Nguyen Van b", "01/01/1990", "123456789", 100, 150, 3000.5);
 
 	cout << "Thong tin nhung nha tro trong queue: \n";
 	hangDoiNhaTro.display();
@@ -234,34 +289,36 @@ int main()
 	if (nhaTroCoChiSoDienCaoNhat != nullptr) {
 		cout << "Phong tro co chi so dien cao nhat:\n";
 		cout << "Ma Phong: " << nhaTroCoChiSoDienCaoNhat->maPhong << endl <<
-		"Chi So Dien: " << nhaTroCoChiSoDienCaoNhat->chiSoDien << "\n";
+			"Chi So Dien: " << nhaTroCoChiSoDienCaoNhat->chiSoDien << "\n";
 	}
 	else {
 		cout << "Queue khong co nha tro nao.\n";
 	}
 
 	std::string tenCanTim = "Tran Van A";
-    NhaTro* nhaTroCuaTranVanA = hangDoiNhaTro.timNhaTroTheoTen(tenCanTim);
-    if (nhaTroCuaTranVanA != NULL) {
-        cout << "Thong tin nha tro cua " << tenCanTim << "\n";
-        cout << "Ma Phong: " << nhaTroCuaTranVanA->maPhong << "\n";
-        // In ra thông tin khác của phòng trọ nếu muốn
-    } else {
-        cout << "Khong tim thay nha tro cua " << tenCanTim << "\n";
-    }
+	NhaTro* nhaTroCuaTranVanA = hangDoiNhaTro.timNhaTroTheoTen(tenCanTim);
+	if (nhaTroCuaTranVanA != NULL) {
+		cout << "Thong tin nha tro cua " << tenCanTim << "\n";
+		cout << "Ma Phong: " << nhaTroCuaTranVanA->maPhong << "\n";
+		// In ra thông tin khác của phòng trọ nếu muốn
+	}
+	else {
+		cout << "Khong tim thay nha tro cua " << tenCanTim << "\n";
+	}
 
 	int soPhongTroDonGiaCaoNhat = hangDoiNhaTro.timSoPhongTroCoDonGiaCaoNhat();
 	if (soPhongTroDonGiaCaoNhat != 0) {
-        cout << "So phong tro co don gia cao nhat" << soPhongTroDonGiaCaoNhat << "\n";
-    } else {
-        cout << "Khong co so phong tro nao co don gia cao nhat" << "\n";
-    }
+		cout << "So phong tro co don gia cao nhat" << soPhongTroDonGiaCaoNhat << "\n";
+	}
+	else {
+		cout << "Khong co so phong tro nao co don gia cao nhat" << "\n";
+	}
 
 	int tongChiSoDien = hangDoiNhaTro.tinhTongChiSoDien();
-    cout << "Tong chi so dien cua tat ca phong tro la: " << tongChiSoDien << "\n";
+	cout << "Tong chi so dien cua tat ca phong tro la: " << tongChiSoDien << "\n";
 
 	int soLuongPhongTro = hangDoiNhaTro.demSoPhongTroNguoiThueSinhtuNam(2002);
-    std::cout << "So luong phong tro co nguoi thue sinh truoc nam 2002 la: " << soLuongPhongTro << "\n";
+	std::cout << "So luong phong tro co nguoi thue sinh truoc nam 2002 la: " << soLuongPhongTro << "\n";
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
